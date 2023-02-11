@@ -36,13 +36,11 @@ public class OrderRepository {
     public void addOrderPartnerPair(String orderId, String partnerId) {
 
         if(orderHashMap.containsKey(orderId) && deliveryPartnerHashMap.containsKey(partnerId)){
-
             HashSet<String> currentOrders = new HashSet<String>();
             if(allOrdersOfPartner.containsKey(partnerId))
                 currentOrders = allOrdersOfPartner.get(partnerId);
             currentOrders.add(orderId);
             allOrdersOfPartner.put(partnerId, currentOrders);
-
             DeliveryPartner partner = deliveryPartnerHashMap.get(partnerId);
             partner.setNumberOfOrders(currentOrders.size());
             orderDeliveryPartnerHashMap.put(orderId, partnerId);
@@ -66,10 +64,7 @@ public class OrderRepository {
             DeliveryPartner partner = deliveryPartnerHashMap.get(partnerId);
             partner.setNumberOfOrders(orders.size());
         }
-
-        if(orderHashMap.containsKey(orderId)){
-            orderHashMap.remove(orderId);
-        }
+        orderHashMap.remove(orderId);
 
     }
 
@@ -78,21 +73,15 @@ public class OrderRepository {
         if(allOrdersOfPartner.containsKey(partnerId)){
             orders = allOrdersOfPartner.get(partnerId);
             for(String order: orders){
-                if(orderDeliveryPartnerHashMap.containsKey(order)){
-
-                    orderDeliveryPartnerHashMap.remove(order);
-                }
+                orderDeliveryPartnerHashMap.remove(order);
             }
             allOrdersOfPartner.remove(partnerId);
         }
-
-        if(deliveryPartnerHashMap.containsKey(partnerId)){
-            deliveryPartnerHashMap.remove(partnerId);
-        }
+        deliveryPartnerHashMap.remove(partnerId);
     }
 
     public String getLastDeliveryTimeByPartnerId(String partnerId) {
-        Integer time = 0;
+        int time = 0;
 
         if(allOrdersOfPartner.containsKey(partnerId)){
             HashSet<String> orders = allOrdersOfPartner.get(partnerId);
@@ -106,7 +95,6 @@ public class OrderRepository {
 
         Integer hour = time/60;
         Integer minutes = time%60;
-
         String hourInString = String.valueOf(hour);
         String minInString = String.valueOf(minutes);
         if(hourInString.length() == 1){
@@ -115,16 +103,15 @@ public class OrderRepository {
         if(minInString.length() == 1){
             minInString = "0" + minInString;
         }
-
         return  hourInString + ":" + minInString;
     }
 
     public Integer getOrdersLeftAfterGivenTimeByPartnerId(String timeS, String partnerId) {
-        Integer hour = Integer.valueOf(timeS.substring(0, 2));
-        Integer minutes = Integer.valueOf(timeS.substring(3));
-        Integer time = hour*60 + minutes;
+        int hour = Integer.parseInt(timeS.substring(0, 2));
+        int minutes = Integer.parseInt(timeS.substring(3));
+        int time = hour*60 + minutes;
 
-        Integer countOfOrders = 0;
+        int countOfOrders = 0;
         if(allOrdersOfPartner.containsKey(partnerId)){
             HashSet<String> orders = allOrdersOfPartner.get(partnerId);
             for(String order: orders){
@@ -140,7 +127,7 @@ public class OrderRepository {
     }
 
     public Integer getCountOfUnassignedOrders() {
-        Integer countOfOrders = 0;
+        int countOfOrders = 0;
         List<String> orders =  new ArrayList<>(orderHashMap.keySet());
         for(String orderId: orders){
             if(!orderDeliveryPartnerHashMap.containsKey(orderId)){
